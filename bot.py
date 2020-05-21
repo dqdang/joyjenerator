@@ -1,15 +1,20 @@
-import discord.utils
+import asyncio
+from datetime import datetime
+import discord
 from discord.ext import commands
 import os
 import requests 
 
+# from dotenv import load_dotenv
+# load_dotenv()
+
 TOKEN = os.getenv('DISCORD_TOKEN')
-CHANNEL=os.getenv('')
+SERVER = os.getenv("DISCORD_SERVER")
 LINK = os.getenv("LINK")
 
-bot = commands.Bot(command_prefix='!')
+client = discord.Client()
 
-async def send_joy():
+def send_joy():
     response = requests.get(LINK)
     if response.ok:
         response = response.json()
@@ -17,22 +22,25 @@ async def send_joy():
     return None
 
 async def check_time():
-    await bot.wait_until_ready()
-    while not bot.is_closed:
-        existing_channel = discord.utils.get(guild.channels, name=channel_name)
-        now=datetime.strftime(datetime.now(),'%H:%M')
-        if now == send_time:
-            await bot.send_message(send_joy())
-        # await asyncio.sleep(60)
+    await client.wait_until_ready()
+    channel = client.get_channel(712826642493472832)
+    while not client.is_closed():
+        await channel.send(send_joy())
+        await asyncio.sleep(3600 * 2) # every 2 hours
 
-@bot.event
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+    if message.content == '!joy':
+        await message.channel.send(send_joy())
+
+@client.event
 async def on_ready():
-    print(bot.user.name)
-    print(bot.user.id)
+    print('Logged in as')
+    print(client.user.name)
+    print(client.user.id)
+    print('------')
 
-@bot.command(name='joy')
-async def joy(ctx):
-    await ctx.send(send_joy())
-
-bot.loop.create_task(check_time())
-bot.run(TOKEN)
+client.loop.create_task(check_time())
+client.run(TOKEN)
