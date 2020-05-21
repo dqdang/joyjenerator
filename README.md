@@ -1,2 +1,2 @@
 # joyjenerator
-make some joy
+generate some joy
