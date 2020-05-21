@@ -10,7 +10,7 @@ LINK = os.getenv("LINK")
 bot = commands.Bot(command_prefix='!')
 
 @bot.command(name='joy')
-async def nine_nine(ctx):
+async def joy(ctx):
     response = requests.get(LINK)
     if response.ok:
         response = response.json()
