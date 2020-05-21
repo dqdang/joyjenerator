@@ -22,7 +22,7 @@ async def check_time():
         existing_channel = discord.utils.get(guild.channels, name=channel_name)
         now=datetime.strftime(datetime.now(),'%H:%M')
         if now == send_time:
-            await bot.send_message(send_joy)
+            await bot.send_message(send_joy())
         # await asyncio.sleep(60)
 
 @bot.event
