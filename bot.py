@@ -3,7 +3,7 @@ from datetime import datetime
 import discord
 from discord.ext import commands
 import os
-import requests 
+import requests
 
 # from dotenv import load_dotenv
 # load_dotenv()
@@ -14,6 +14,7 @@ LINK = os.getenv("LINK")
 
 client = discord.Client()
 
+
 def send_joy():
     response = requests.get(LINK)
     if response.ok:
@@ -21,12 +22,14 @@ def send_joy():
         return response['message']
     return None
 
+
 async def check_time():
     await client.wait_until_ready()
     channel = client.get_channel(712826642493472832)
     while not client.is_closed():
         await channel.send(send_joy())
-        await asyncio.sleep(3600 * 2) # every 2 hours
+        await asyncio.sleep(3600 * 2)  # every 2 hours
+
 
 @client.event
 async def on_message(message):
@@ -34,6 +37,7 @@ async def on_message(message):
         return
     if message.content == '!joy':
         await message.channel.send(send_joy())
+
 
 @client.event
 async def on_ready():
